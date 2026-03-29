@@ -20,6 +20,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata>{
     description: note.content.length > 120
       ? note.content.slice(0, 120) + "..."
       : note.content,  
+    openGraph: {
+      title: `Note - ${note.title}`,
+      description: note.content.slice(0, 100),
+      url: `https://08-zustand-mauve-gamma.vercel.app/notes/${id}`,
+      siteName: "NoteHub",
+      images: [
+        {
+          url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
+          width: 1200,
+          height: 630,
+          alt: "NoteHub - A modern Todo application",
+        },
+      ],
+    },
   };
 }
 
