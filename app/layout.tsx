@@ -27,6 +27,22 @@ export const metadata: Metadata = {
     shortcut: '/todo-icon.svg',
     apple: '/todo-icon.svg',
   },
+  openGraph: {
+    title: `NoteHub`,
+    description:
+      'Notehub: A modern Todo application developed as a Next.js educational project. Focused on performance and clean user experience.',
+    url: `https://08-zustand-mauve-gamma.vercel.app/`,
+    siteName: 'NoteHub',
+    images: [
+      {
+        url: 'https://ac.goit.global/fullstack/react/og-meta.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'NoteHub - A modern Todo application',
+      },
+    ],
+    type: 'article',
+  },
 };
 
 export default function RootLayout({
