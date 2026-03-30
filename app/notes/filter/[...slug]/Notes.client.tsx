@@ -7,33 +7,29 @@ import { useDebouncedCallback } from "use-debounce";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import Pagination from "@/components/Pagination/Pagination";
-import Modal from "@/components/Modal/Modal";
 import NoteList from "@/components/NoteList/NoteList";
-import NoteForm from "@/components/NoteForm/NoteForm";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import NoResults from "@/components/NoResults/NoResults";
 
 import { NoteTag } from "@/types/note";
 import { fetchNotes } from "@/lib/api";
+import Link from "next/link";
 
 interface NotesClientProps {
-  category?: NoteTag;
+  tag?: NoteTag;
 }
 
-export default function NotesClient({ category }: NotesClientProps) {
+export default function NotesClient({ tag }: NotesClientProps) {
   const [page, setPage] = useState(1);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [searchQuery, setSearchQuery] = useState("");
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
   const { data, error, isError } = useQuery({
-    queryKey: ["notes", page, searchQuery, category],
+    queryKey: ["notes", page, searchQuery, tag],
     queryFn: () =>
-      fetchNotes({ page, perPage: 12, search: searchQuery, tag: category }),
+      fetchNotes({ page, perPage: 12, search: searchQuery, tag: tag }),
     placeholderData: keepPreviousData,
-    refetchOnMount: false,
+    refetchOnMount: true,
   });
   if (isError) throw error;
 
@@ -42,7 +38,7 @@ export default function NotesClient({ category }: NotesClientProps) {
       setSearchQuery(event.target.value);
       setPage(1);
     },
-    400,
+    500,
   );
 
   const notes = data?.notes ?? [];
@@ -59,14 +55,9 @@ export default function NotesClient({ category }: NotesClientProps) {
             onPageChange={setPage}
           />
         )}
-        <button className={css.button} onClick={openModal}>
+        <Link href="/notes/action/create" className={css.button}>
           Create note +
-        </button>
-        {isModalOpen && (
-          <Modal onClose={closeModal}>
-            <NoteForm onClose={closeModal} />
-          </Modal>
-        )}
+        </Link>
       </header>
       {data && data.notes.length === 0 && <NoResults />}
       {notes.length > 0 && <NoteList notes={notes} />}

@@ -14,16 +14,16 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const category = (slug[0] === "all" ? undefined : slug[0]) as NoteTag;
-  const title = category ? `NoteHub - ${category}` : "NoteHub - All Notes";
-  const description  = category ? `Browse ${category} notes on NoteHub.` : "Browse all notes on NoteHub.";
+  const tag = (slug[0] === "all" ? undefined : slug[0]) as NoteTag;
+  const title = tag ? `NoteHub - ${tag}` : "NoteHub - All Notes";
+  const description  = tag ? `Browse ${tag} notes on NoteHub.` : "Browse all notes on NoteHub.";
 
   return {
     title,
     description,
     openGraph: {
-      url: category
-        ? `https://08-zustand-mauve-gamma.vercel.app/notes/filter/all${category}`
+      url: tag
+        ? `https://08-zustand-mauve-gamma.vercel.app/notes/filter/all${tag}`
         : "https://08-zustand-mauve-gamma.vercel.app/notes/filter/all",
       siteName: "NoteHub",
       images: [
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function NotesPage({ params }: Props) {
   const { slug } = await params
 
-  const category = (slug[0] === "all" ? undefined : slug[0]) as
+  const tag = (slug[0] === "all" ? undefined : slug[0]) as
     | NoteTag
     | undefined;
   
@@ -49,12 +49,12 @@ export default async function NotesPage({ params }: Props) {
 
   await queryClient.prefetchQuery({
     queryKey: ["notes", 1, ""],
-    queryFn: () => fetchNotes({ page: 1, perPage: 12, search: "", tag: category }),
+    queryFn: () => fetchNotes({ page: 1, perPage: 12, search: "", tag: tag }),
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <NotesClient key={category ?? 'all'} category={ category} />
+      <NotesClient key={tag ?? 'all'} tag={ tag} />
     </HydrationBoundary>
   );
 }
